@@ -1,0 +1,9 @@
+{
+  "name": "alterboy",
+  "version": "1.0.0",
+  "description": "A tool for explaining, optimizing, scheduling and running big, scary, and hairy SQL ALTER statements",
+  "main": "index.js",
+  "repository": "https://github.com/erulabs/alterboy",
+  "author": "Seandon Mooy",
+  "license": "MIT"
+}
