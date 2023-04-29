@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+manifests:
+  kustomize:
+    paths:
+      - k8s/dev
+portForward:
+  - resourceType: Service
+    resourceName: mariadb
+    port: 3306
+    address: 0.0.0.0
+    localPort: 3306
+  - resourceType: Service
+    resourceName: mysql
+    port: 3306
+    address: 0.0.0.0
+    localPort: 3307
+  - resourceType: Service
+    resourceName: postgres
+    port: 5432
+    address: 0.0.0.0
+    localPort: 5432

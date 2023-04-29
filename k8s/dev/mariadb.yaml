@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  selector:
+    matchLabels: { app: mariadb }
+  replicas: 1
+  template:
+    metadata:
+      labels: { app: mariadb }
+    spec:
+      containers:
+        - name: master
+          image: mariadb:10
+          imagePullPolicy: IfNotPresent
+          resources: { requests: { cpu: 50m, memory: 100Mi } }
+          ports:
+            - { name: mariadb, containerPort: 3306 }
+          env:
+            - { name: TZ, value: UTC }
+            - { name: MARIADB_USER, value: alterboy }
+            - { name: MARIADB_DATABASE, value: alterboy }
+            - { name: MARIADB_PASSWORD, value: somethingMadeUpForDevelopment }
+            - {
+                name: MARIADB_ROOT_PASSWORD,
+                value: somethingMadeUpForDevelopment,
+              }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  labels: { app: mariadb }
+spec:
+  ports:
+    - name: mariadb
+      port: 3306
+      targetPort: mariadb
+  selector: { app: mariadb }

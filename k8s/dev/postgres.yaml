@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels: { app: postgres }
+  replicas: 1
+  template:
+    metadata:
+      labels: { app: postgres }
+    spec:
+      containers:
+        - name: master
+          image: postgres:13-bullseye
+          imagePullPolicy: Always
+          resources: { requests: { cpu: 50m, memory: 100Mi } }
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env:
+            - { name: TZ, value: UTC }
+            - { name: POSTGRES_DB, value: alterboy }
+            - { name: POSTGRES_USER, value: alterboy }
+            - { name: POSTGRES_PASSWORD, value: somethingMadeUpForDevelopment }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+  selector:
+    app: postgres
