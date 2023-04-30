@@ -47,22 +47,28 @@ async function setupDatabase(database) {
   })
 
   const tables = {
-    users: t => {
+    ab_users: t => {
       t.increments('id').primary()
       t.string('first_name', 100)
       t.string('last_name', 100)
       t.text('bio')
     },
+    ab_receipts: t => {
+      t.increments('id').primary()
+      t.integer('userId').unsigned().notNullable()
+      t.foreign('userId').references('ab_users.id').withKeyName('ab_receipts_user_id_foreign')
+      t.string('first_name', 100)
+      t.string('last_name', 100)
+      t.text('text_data')
+    },
+  }
+
+  for (const table of Object.keys(tables).reverse()) {
+    await db.schema.dropTableIfExists(table)
   }
 
   for (const table in tables) {
-    try {
-      await db.schema.createTable(table, tables[table])
-    } catch (err) {
-      if (err.errno === 1050) {
-        console.log(`${database.name}: Table "${table}" already exists`)
-      } else throw err
-    }
+    await db.schema.createTable(table, tables[table])
   }
 
   await db.context.destroy()
